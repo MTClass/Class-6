@@ -12,9 +12,16 @@
   shape-rendering: crispEdges;
 }
 
-.grid path {
-  stroke-width: 1;
+.grid line {
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: crispEdges;
 }
+
+.grid path {
+  stroke-width: 0;
+}
+  
 </style>
 <body>
 
@@ -65,10 +72,8 @@ d3.csv(url, function(error, data) {
       .data([data])
       .attr("class", "line")
       .attr("d", valueline);
-      
   
-  
-  // Add the scatterplot
+   // Add the scatterplot
   svg.selectAll("dot")
       .data(data)
     .enter().append("circle")
@@ -78,12 +83,57 @@ d3.csv(url, function(error, data) {
       .attr("cy", function(d) { return y(d.mag); });
   
   // Add the X Axis
-  svg.append("g")
+    svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
+  
+ // text label for the x axis
+  svg.append("text")             
+      .attr("x", 480 )
+      .attr("y",  480 )
+      .style("text-anchor", "middle")
+      .text("Time");
+             
   // Add the Y Axis
   svg.append("g")
       .call(d3.axisLeft(y));
+  // text label for the y axis
+   svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Magnitude"); 
+  
+  // add a title
+  svg.append("text")
+      .attr("x", (width / 2))				
+      .attr("y", 0 - (margin.top / 2))
+      .attr("text-anchor", "middle")	
+      .style("font-size", "20px") 
+      .style("text-decoration", "underline") 	
+      .text("Magnitude vs Time Graph");
+  
+  // add the X gridlines
+  svg.append("g")			
+      .attr("class", "grid")
+      .attr("transform", "translate(0," + height + ")")
+      .call(make_x_gridlines()
+          .tickSize(-height)
+          .tickFormat("")
+      )
+
+  // add the Y gridlines
+  svg.append("g")			
+      .attr("class", "grid")
+      .call(make_y_gridlines()
+          .tickSize(-width)
+          .tickFormat("")
+      )
+
+  
 });
+  
 </script>
 </body>
